@@ -1,9 +1,9 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 import tensorflow as tf
 tf.config.threading.set_intra_op_parallelism_threads(1)
 tf.config.threading.set_inter_op_parallelism_threads(1)
-
 
 # Import required libraries
 from flask import Flask, request, jsonify
@@ -15,47 +15,66 @@ from keras.models import load_model
 from nltk.stem import WordNetLemmatizer
 import nltk
 import datetime
+import logging
 
-# Initialize lemmatizer and load chatbot components
+# Enable logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+# Initialize lemmatizer
 lemmatizer = WordNetLemmatizer()
-model = load_model("mymodel.h5")  # Load trained model
-intents = json.loads(open("intents.json").read())  # Load intents
-words = pickle.load(open("words.pkl", "rb"))  # Vocabulary file
-classes = pickle.load(open("classes.pkl", "rb"))  # Classes file
+
+# Load model and data with error handling
+try:
+    logger.debug("🔄 Loading model...")
+    model = load_model("mymodel.h5")  # Load trained model
+    logger.debug("✅ Model loaded successfully.")
+except Exception as e:
+    logger.error(f"❌ Error loading model: {e}")
+    raise SystemExit("Model loading failed.")
+
+try:
+    logger.debug("🔄 Loading intents, words, and classes...")
+    intents = json.loads(open("intents.json").read())
+    words = pickle.load(open("words.pkl", "rb"))
+    classes = pickle.load(open("classes.pkl", "rb"))
+    logger.debug("✅ Data files loaded successfully.")
+except Exception as e:
+    logger.error(f"❌ Error loading data files: {e}")
+    raise SystemExit("Failed to load intent/data files.")
 
 # Initialize Flask app
 app = Flask(__name__)
 
 # Preprocessing user input
 def clean_up_sentence(sentence):
-    sentence_words = nltk.word_tokenize(sentence)  # Tokenize words
-    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]  # Lemmatize words
+    sentence_words = nltk.word_tokenize(sentence)
+    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
     return sentence_words
 
 def bow(sentence, words):
     sentence_words = clean_up_sentence(sentence)
-    bag = [0] * len(words)  # Initialize empty bag
+    bag = [0] * len(words)
     for s in sentence_words:
         for i, w in enumerate(words):
-            if w == s:  # Match word against vocabulary
+            if w == s:
                 bag[i] = 1
     return np.array(bag)
 
 # Predict intent
 def predict_class(sentence):
-    p = bow(sentence, words)  # Convert sentence to BoW
+    p = bow(sentence, words)
     res = model.predict(np.array([p]))[0]
     ERROR_THRESHOLD = 0.25
     results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
     results.sort(key=lambda x: x[1], reverse=True)
-    return_list = [{"intent": classes[r[0]], "probability": str(r[1])} for r in results]
-    return return_list
+    return [{"intent": classes[r[0]], "probability": str(r[1])} for r in results]
 
 # Get response based on intent
 def get_response(ints, intents_json):
-    tag = ints[0]['intent'] if ints else 'noanswer'  # Default response
+    tag = ints[0]['intent'] if ints else 'noanswer'
     for i in intents_json['intents']:
-        if i['tag'] == tag:  # Match tag to response
+        if i['tag'] == tag:
             return random.choice(i['responses'])
     return "I'm not sure I understand. Can you try asking another way?"
 
@@ -66,17 +85,20 @@ def home():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_input = request.json.get("message", "")  # Get user input from JSON
-    ints = predict_class(user_input)  # Predict intent
-    response = get_response(ints, intents)  # Get response
+    user_input = request.json.get("message", "")
+    logger.debug(f"📩 Received message: {user_input}")
+    ints = predict_class(user_input)
+    response = get_response(ints, intents)
+    logger.debug(f"🤖 Responding with: {response}")
     return jsonify({"response": response})
 
-# Running the Flask app
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-
-# Helper function for chatbot response
+# Helper function for chatbot logic
 def get_riley_response(message):
-    ints = predict_class(message)  # Predict intent
-    response = get_response(ints, intents)  # Get response
+    ints = predict_class(message)
+    response = get_response(ints, intents)
     return response
+
+# Run the app
+if __name__ == "__main__":
+    logger.info("🚀 Starting Riley API server...")
+    app.run(host="0.0.0.0", port=5000)
