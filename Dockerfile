@@ -9,7 +9,6 @@ ENV PATH="/home/user/.local/bin:$PATH"
 
 WORKDIR /app
 
-COPY --chown=user ./requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt  
 RUN run: pip install --upgrade pip
 RUN pip install -r requirements.txt python app.py
