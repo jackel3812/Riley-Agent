@@ -6,3 +6,4 @@ gradio
 transformers
 tensorflow-cpu==2.13.0
 nltk
+TTS==0.17.4
