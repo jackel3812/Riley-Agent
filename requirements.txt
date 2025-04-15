@@ -3,4 +3,3 @@ numpy
 nltk
 keras
 gradio
-TTS
