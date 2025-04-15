@@ -61,7 +61,9 @@ def chat():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
 
- def get_riley_response(message):
+def get_riley_response(message):
     ints = predict_class(message)
     response = get_response(ints, intents)
     return response
+
+
