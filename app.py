@@ -1,3 +1,6 @@
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 import gradio as gr
 from transformers import pipeline
 from riley_api import get_riley_response as ask_riley
