@@ -2,6 +2,6 @@ Flask
 numpy
 nltk
 keras
-tensorflow==2.19.0
+tensorflow
 gradio
-TTS==0.22.0
+TTS
