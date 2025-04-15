@@ -9,7 +9,7 @@ ENV PATH="/home/user/.local/bin:$PATH"
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir --upgrade -r requirements.txt  
+RUN pip install --https://huggingface.co/spaces/Zelgodiz/Riley/tree/main --upgrade -r requirements.txt  
 RUN run: pip install --upgrade pip
 RUN pip install -r requirements.txt python app.py
 Run pip install flask numpy nltk keras tensorflow gradio TTS
