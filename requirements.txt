@@ -4,4 +4,4 @@ nltk
 keras
 gradio
 transformers
-tensorflow>=2.18.0
+tensorflow>=2.16.0
