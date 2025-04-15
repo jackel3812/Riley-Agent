@@ -12,5 +12,8 @@ WORKDIR /app
 COPY --chown=user ./requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt  
 RUN run: pip install --upgrade pip
+RUN pip install -r requirements.txt python app.py
+Run pip install flask numpy nltk keras tensorflow gradio TTS
+Run python -m nltk.downloader punkt wordnet
 COPY --chown=user . /app
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
