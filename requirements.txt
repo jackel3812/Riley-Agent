@@ -5,3 +5,4 @@ keras
 gradio
 transformers
 tensorflow-cpu==2.13.0
+nltk
