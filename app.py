@@ -1,6 +1,6 @@
 import gradio as gr
 from transformers import pipeline
-import ask_riley
+from riley_api import get_riley_response as ask_riley
 from riley_genesis import RileyCore
 import tempfile
 from TTS.api import TTS
