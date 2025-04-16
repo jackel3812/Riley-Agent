@@ -1,64 +1,68 @@
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
+import tensorflow as tf
 import gradio as gr
-from models import ask_riley
-from riley_genesis import RileyCore
-import tempfile
-from TTS.api import TTS
+from keras.models import load_model
+from nltk.stem import WordNetLemmatizer
+import nltk
+import numpy as np
+import pickle
+import json
 
-riley = RileyCore()
-tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
+# Prepare
+nltk.download('punkt')
+lemmatizer = WordNetLemmatizer()
 
-def chat_interface(history, user_input):
-    if user_input.startswith("!mode"):
-        _, mode = user_input.split()
-        return history + [{"role": "system", "content": riley.set_mode(mode)}], "", None, history
+model = load_model("mymodel.h5")
+intents = json.loads(open("intents.json").read())
+words = pickle.load(open("words.pkl", "rb"))
+classes = pickle.load(open("classes.pkl", "rb"))
 
-    if user_input.startswith("!personality"):
-        _, profile = user_input.split()
-        return history + [{"role": "system", "content": riley.set_personality(profile)}], "", None, history
+# NLP logic
+def clean_up_sentence(sentence):
+    sentence_words = nltk.word_tokenize(sentence)
+    return [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
 
-    context_prompt = riley.think(user_input)
-    response_raw = ask_riley(context_prompt)
-    response = response_raw.replace('\n', ' ').replace('\r', '').replace('\\', '').strip()
+def bow(sentence, words):
+    sentence_words = clean_up_sentence(sentence)
+    bag = [0] * len(words)
+    for s in sentence_words:
+        for i, w in enumerate(words):
+            if w == s:
+                bag[i] = 1
+    return np.array(bag)
 
-    if "User:" in response:
-        response = response.split("User:")[0].strip()
+def predict_class(sentence):
+    p = bow(sentence, words)
+    res = model.predict(np.array([p]))[0]
+    ERROR_THRESHOLD = 0.25
+    results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
+    results.sort(key=lambda x: x[1], reverse=True)
+    return [{"intent": classes[r[0]], "probability": str(r[1])} for r in results]
 
-    riley.remember(f"Riley: {response}")
-    history.append({"role": "user", "content": user_input})
-    history.append({"role": "assistant", "content": response})
+def get_response(ints):
+    tag = ints[0]['intent'] if ints else 'noanswer'
+    for i in intents['intents']:
+        if i['tag'] == tag:
+            return np.random.choice(i['responses'])
+    return "I'm not sure I understand."
 
-    audio_path = tempfile.mktemp(suffix=".wav")
-    tts.tts_to_file(text=response, file_path=audio_path)
+def riley_chat(message, history=[]):
+    ints = predict_class(message)
+    response = get_response(ints)
+    history.append((message, response))
+    return history, ""
 
-    return history, "", audio_path, history
-
-css = """
-body { background: #0b0f1e; color: #00ffff; font-family: 'Orbitron', sans-serif; }
-.gradio-container {
-    border: 2px solid #ffaa00; background: linear-gradient(145deg, #000000, #0c1440);
-    box-shadow: 0 0 25px #ffaa00; padding: 25px; border-radius: 20px;
-}
-button {
-    background-color: #0c1440; color: #ffaa00; border: 2px solid #ffaa00; border-radius: 8px;
-}
-button:hover { background-color: #ffaa00; color: black; }
-.chatbox {
-    background-color: #111; color: #00ffff; border: 1px solid #00ffff; padding: 10px; height: 450px;
-}
-"""
-
-with gr.Blocks(css=css) as demo:
-    gr.Markdown("# 🧬 RILEY-AI: Genesis Core (Phi-2 Patched)")
-    gr.Markdown("### Fixed Memory | No Looping | Voice Enabled")
-
-    chatbot = gr.Chatbot(label="Riley Terminal", elem_classes="chatbox", type='messages')
-    msg = gr.Textbox(label="Ask or command Riley...")
-    audio = gr.Audio(label="Riley’s Voice", interactive=False)
-    clear = gr.Button("Clear Chat")
-    state = gr.State([])
-
-    msg.submit(chat_interface, [state, msg], [chatbot, msg, audio, state])
-    clear.click(lambda: ([], "", None, []), None, [chatbot, msg, audio, state])
+# Gradio 4.x interface
+demo = gr.ChatInterface(
+    fn=riley_chat,
+    title="🧠 Riley AI - Intent Chatbot",
+    description="Ask Riley anything. She's trained and ready!",
+    retry_btn="🔁 Retry",
+    undo_btn="↩️ Undo",
+    theme="soft"
+)
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(server_name="0.0.0.0", server_port=7860)
