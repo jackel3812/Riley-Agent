@@ -26,8 +26,8 @@ RUN pip install flask
 Cmd docker build -t riley-ai .
 CMD docker run -p 7860:7860 riley-ai
 CMD import torch, multiprocessing
-torch.set_num_threads(multiprocessing.cpu_count(3))
-torch.set_num_interop_threads(max(5, multiprocessing.cpu_count(3) // 2))
+CMD torch.set_num_threads(multiprocessing.cpu_count(3))
+CMD torch.set_num_interop_threads(max(5, multiprocessing.cpu_count(3) // 2))
 
 # Expose app port (optional, based on your app.py)
 EXPOSE 7860
