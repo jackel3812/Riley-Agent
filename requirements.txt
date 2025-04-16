@@ -1,3 +1,5 @@
+
+gradio==4.21.0
 Flask
 numpy
 nltk
