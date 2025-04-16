@@ -23,8 +23,8 @@ RUN pip install gtts
 RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 RUN pip install keras
 RUN pip install flask
-   docker build -t riley-ai .
-   docker run -p 7860:7860 riley-ai
+Cmd docker build -t riley-ai .
+CMD docker run -p 7860:7860 riley-ai
 
 # Expose app port (optional, based on your app.py)
 EXPOSE 7860
