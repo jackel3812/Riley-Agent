@@ -1,5 +1,5 @@
 FROM python
-RUN pip install tts
+CMD pip install TTS
 CMD pipe python.to("cpu")  # Ensure model runs on CPU and python
 WORKDIR /app
 COPY . .
