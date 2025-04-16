@@ -1,20 +1,25 @@
 import gradio as gr
-import os
+
+# Dummy response function (replace with your AI later)
+def submit_message(user_input, chat_history):
+    response = f"Riley says: {user_input[::-1]}"  # <-- just reverses input for demo
+    chat_history.append((user_input, response))
+    return chat_history, ""
 
 # Build the Gradio interface
 def build_interface():
     with gr.Blocks(css="static/style.css") as demo:
-        gr.Markdown("# 🧬 Riley-AI Voice Interface")
+        gr.Markdown("# 🧬 Riley-AI Chat Interface")
 
-        chatbot = gr.Chatbot(type="messages", label="Chat with Riley")
+        chatbot = gr.Chatbot(label="Chat with Riley")
         user_input = gr.Textbox(label="Type your message here")
-        audio_output = gr.Audio(label="Riley’s Voice", interactive=False)
+        state = gr.State([])  # Holds chat history
         submit_btn = gr.Button("Send")
 
         submit_btn.click(
-            submit_message,
-            inputs=user_input,
-            outputs=[chatbot, audio_output]
+            fn=submit_message,
+            inputs=[user_input, state],
+            outputs=[chatbot, user_input],
         )
 
     return demo
@@ -23,5 +28,3 @@ def build_interface():
 if __name__ == "__main__":
     interface = build_interface()
     interface.launch()
-
-
