@@ -8,3 +8,4 @@ __pycache__/ export-ignore
 .env export-ignore
 .DS_Store export-ignore
 Riley_AI_Core.zip filter=lfs diff=lfs merge=lfs -text
+TTS-0.22.0-cp311-cp311-manylinux1_x86_64.whl filter=lfs diff=lfs merge=lfs -text
