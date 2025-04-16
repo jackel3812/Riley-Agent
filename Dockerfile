@@ -2,12 +2,12 @@ FROM python
 CMD pipe python.to("cpu")  # Ensure model runs on CPU and python
 WORKDIR /app
 COPY . .
+CMD cpu(5)
+
+
 
 
 RUN python3 -m pip install --upgrade pip
-RUN Upgrade pip and install your TTS wheel first
-RUN git clone https://github.com/coqui-ai/TTS
-RUN pip install -e .[all,dev,notebooks]  # Select the relevant extras
 
 
 # Install remaining project dependencies
