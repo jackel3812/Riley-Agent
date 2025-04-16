@@ -1,3 +1,4 @@
+ Run pip install sudo 
 FROM python
 WORKDIR /app
 COPY . .
@@ -7,14 +8,3 @@ RUN pip install gtts
 ENV GRADIO_SERVER_NAME="0.0.0.0"
 CMD ["python", "app.py"]
 EXPOSE 7860
-
-# Install NVIDIA CUDA Toolkit
-
-RUN pip apt install -nvidia-cuda-toolkit -nvidia-driver-535 -y
-RUN pip install -torch -torchvision -torchaudio --index-url https://download.pytorch.org/whl/cu118
-
-
-
-
-Run sudo -eboot
-
