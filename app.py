@@ -1,3 +1,12 @@
+import os
+
+# ✅ Redirect paths so numba and matplotlib can cache without errors
+os.environ["NUMBA_CACHE_DIR"] = "/tmp/numba_cache"
+os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
+
+# Optional: make sure temp folders exist
+os.makedirs("/tmp/numba_cache", exist_ok=True)
+os.makedirs("/tmp/mplconfig", exist_ok=True)
 import gradio as gr
 from models import ask_riley
 from riley_genesis import RileyCore
