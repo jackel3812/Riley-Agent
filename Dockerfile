@@ -1,30 +1,23 @@
----
-version: '3.3'
+# Use the official Hugging Face Python base image
+FROM huggingface/transformers-pytorch-gpu:latest
 
-services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
-    container_name: elasticsearch
+# Set working directory
+WORKDIR /code
 
-  app:
-    container_name: elasticsearch-chatbot-app
-    build: app
-    ports:
-      - "5000:5000"
-    environment:
-      - ELASTIC_BASE_URL=http://elasticsearch:9200
-      - WATSON_VERSION=test
-      - WATSON_USERNAME=test
-      - WATSON_PASSWORD=test
-      - WATSON_API_URL=test
-      - WATSON_ASSISTANT_ID=test
-    depends_on:
-      - elasticsearch
+# Copy all files to the container
+COPY . .
 
-  web:
-    container_name: elasticsearch-chatbot-web
-    build: web
-    ports:
-      - "3000:3000"
-    depends_on:
-      - app
+# Install system packages if needed
+RUN apt-get update && \
+    apt-get install -y libsndfile1 ffmpeg && \
+    apt-get clean
+
+# Install Python dependencies
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+# Expose port for Hugging Face Spaces
+EXPOSE 7860
+
+# Run the app
+CMD ["python", "app.py"]
