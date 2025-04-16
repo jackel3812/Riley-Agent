@@ -6,4 +6,6 @@ RUN pip install --no-cache-dir gradio
 EXPOSE 7860
 ENV GRADIO_SERVER_NAME="0.0.0.0"
 
+RUN Pip install TTS==0.22.0 
+
 CMD ["python", "app.py"]
