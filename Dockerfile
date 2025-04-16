@@ -20,7 +20,7 @@ RUN pip install --upgrade pip && \
     pip install --root-user-action=ignore -r requirements.txt
 
 
-EXPOSE 7860
+EXPOSE 9000
 
 CMD ["python", "app.py"]
 
