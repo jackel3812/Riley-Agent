@@ -24,8 +24,5 @@ RUN python -m nltk.downloader punkt wordnet
 # Command to run the server
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
 
-Run # Use RUN to set performance-oriented configurations
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    python -m nltk.downloader punkt wordnet
---memory=100MB my_container
+
+RUN --memory=100MB 
