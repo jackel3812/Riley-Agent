@@ -12,11 +12,6 @@ def build_interface():
         audio_output = gr.Audio(label="Riley's Voice Output", interactive=False)
         submit_btn = gr.Button("Send")
 
-        submit_btn.click(
-            submit_message,
-            inputs=user_input,
-            outputs=[chatbot, audio_output]
-        )
 
     return demo
 
