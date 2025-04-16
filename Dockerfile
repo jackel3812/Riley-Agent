@@ -1,4 +1,3 @@
-# Use the latest GPU-enabled PyTorch image with Hugging Face support
 FROM FROM /python:3.10-slim/
 
 # Set working directory
