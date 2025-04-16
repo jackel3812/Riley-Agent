@@ -7,3 +7,4 @@
 __pycache__/ export-ignore
 .env export-ignore
 .DS_Store export-ignore
+Riley_AI_Core.zip filter=lfs diff=lfs merge=lfs -text
