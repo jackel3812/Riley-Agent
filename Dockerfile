@@ -1,5 +1,4 @@
 FROM python
-RUN pip install TTS-0.22.0-cp311-cp311-manylinux1_x86_64.whl
 CMD pipe python.to("cpu")  # Ensure model runs on CPU and python
 WORKDIR /app
 COPY . .
