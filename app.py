@@ -10,7 +10,7 @@ os.makedirs("/tmp/mplconfig", exist_ok=True)
 os.makedirs("/tmp/.cache", exist_ok=True)
 
 # Fix thread usage
-torch.set_num_threads(multiprocessing.cpu_count(3))
+torch.set_num_threads(multiprocessing.cpu_count(1))
 
 import gradio as gr
 from models import ask_riley
@@ -20,8 +20,8 @@ from TTS.api import TTS
 
 import torch, multiprocessing
 
-torch.set_num_threads(multiprocessing.cpu_count(3))
-torch.set_num_interop_threads(max(5, multiprocessing.cpu_count(3) // 2))
+torch.set_num_threads(multiprocessing.cpu_count(1))
+torch.set_num_interop_threads(max(, multiprocessing.cpu_count(1) // ))
 
 riley = RileyCore()
 TTS= TTS(model_name="TTS_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
