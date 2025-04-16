@@ -1,7 +1,7 @@
 import gradio as gr
 import os
 
-from riley_api import get_riley_response 
+from riley_api 
 
 # Riley AI voice response
 def submit_message(message):
