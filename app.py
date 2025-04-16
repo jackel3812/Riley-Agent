@@ -1,13 +1,9 @@
+import gradio as gr
+
+
+
 import os
 import tempfile
-
-
-
-
-
-
-
-
 # Environment configuration to avoid permission errors
 os.environ["NUMBA_DISABLE_CACHE"] = "1"
 os.environ["NUMBA_CACHE_DIR"] = tempfile.gettempdir()
