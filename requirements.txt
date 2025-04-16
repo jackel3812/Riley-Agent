@@ -3,4 +3,4 @@ numpy
 nltk
 keras
 tensorflow
-TTS==
+TTS
