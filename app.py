@@ -1,19 +1,15 @@
-# app.py
-import torch
-torch.set_num_threads(27)  # Try 2–4, experiment with what runs faster
-
 import gradio as gr
 from models import ask_riley
 from riley_genesis import RileyCore
-from TTS.api import TTS
 import tempfile
+from TTS.api import TTS
 
-# Initialize core engine and TTS
+# Initialize Riley + TTS
 riley = RileyCore()
 tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
-# app.p
-         
+# Chat logic
+def chat_interface(history, user_input):
     if user_input.startswith("!mode"):
         _, mode = user_input.split()
         return history + [{"role": "system", "content": riley.set_mode(mode)}], "", None, history
@@ -24,7 +20,7 @@ tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
     context_prompt = riley.think(user_input)
     response_raw = ask_riley(context_prompt)
-    response = response_raw.replace('\n', ' ').replace('\r', '').strip()
+    response = response_raw.replace('\n', ' ').replace('\r', '').replace('\\', '').strip()
 
     if "User:" in response:
         response = response.split("User:")[0].strip()
@@ -38,7 +34,7 @@ tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
     return history, "", audio_path, history
 
-# UI style
+# Custom CSS
 css = """
 body { background: #0b0f1e; color: #00ffff; font-family: 'Orbitron', sans-serif; }
 .gradio-container {
@@ -54,13 +50,14 @@ button:hover { background-color: #ffaa00; color: black; }
 }
 """
 
+# UI Layout
 with gr.Blocks(css=css) as demo:
-    gr.Markdown("# 🧪 RILEY-AI: Genesis Core")
-    gr.Markdown("### Fixed Memory | Voice Output Enabled")
+    gr.Markdown("# 🧬 RILEY-AI: Genesis Core (Phi-2 Patched)")
+    gr.Markdown("### Fixed Memory | No Looping | Voice Enabled")
 
     chatbot = gr.Chatbot(label="Riley Terminal", elem_classes="chatbox", type='messages')
     msg = gr.Textbox(label="Ask or command Riley...")
-    audio = gr.Audio(label="Riley's Voice", interactive=False)
+    audio = gr.Audio(label="Riley’s Voice", interactive=False)
     clear = gr.Button("Clear Chat")
     state = gr.State([])
 
