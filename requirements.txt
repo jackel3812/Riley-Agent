@@ -1,6 +1,6 @@
 # TTS gets installed BEFORE anything else so it pins numpy
 TTS==0.17.1
-Pip Decide whats best 
+
 # Now the rest that tolerate 1.22.0
 Flask
 numpy==1.23.0
