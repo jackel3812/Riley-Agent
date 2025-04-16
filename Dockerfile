@@ -11,7 +11,7 @@ WORKDIR /app
 # Install pip and upgrade it
 RUN pip install --upgrade pip
 
-Run unzip https://huggingface.co/spaces/Zelgodiz/Riley/blob/main/Riley_AI_Core.zip-d Riley
+Run unzip Riley_AI_Core.zip -d Riley
 
 # Copy requirements file and install dependencies
 COPY requirements.txt /app/
