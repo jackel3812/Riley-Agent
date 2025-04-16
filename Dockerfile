@@ -1,8 +1,8 @@
 
 FROM huggingface/transformers-pytorch-gpu:latest
 
-# Set working directory
-WORKDIR /Riley
+
+WORKDIR Riley
  copy riley_api.py
 
 
