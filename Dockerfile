@@ -18,4 +18,27 @@ COPY --chown=user . /app
 
 # Download NLTK data
 RUN python -m nltk.downloader punkt wordnet
+FROM python:3.9
 
+# Set the working directory
+WORKDIR 
+
+# Install necessary packages
+RUN pip install --no-cache-dir some-package
+
+# Add your application code
+COPY . .
+
+# Set resource limits for the container
+# Note: This is typically done in the Docker run command or docker-compose.yml, not in the Dockerfile
+# Example of setting limits in docker-compose.yml:
+# services:
+#   your_service:
+#     deploy:
+#       resources:
+#         limits:
+#           cpus: '0.1'  # 100mb CPU equivalent
+#           memory: 100M
+
+# Command to run your application
+CMD ["python", "your_script.py"]
