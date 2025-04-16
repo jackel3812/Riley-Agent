@@ -27,7 +27,7 @@ WORKDIR
 RUN pip install --no-cache-dir some-package
 
 # Add your application code
-COPY . .
+COPY . /app
 
 # Set resource limits for the container
 # Note: This is typically done in the Docker run command or docker-compose.yml, not in the Dockerfile
