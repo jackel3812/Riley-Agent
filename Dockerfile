@@ -1,27 +1,29 @@
-
+# Use the latest GPU-enabled PyTorch image with Hugging Face support
 FROM huggingface/transformers-pytorch-gpu:latest
 
+# Set working directory
+WORKDIR /app
 
-WORKDIR Main
-
-
-
-
-# Install system packages needed by TTS/librosa
+# Install required system libraries for audio + TTS
 RUN apt-get update && \
     apt-get install -y libsndfile1 ffmpeg && \
-    apt-get clean
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set env variables to prevent caching errors in Hugging Face
+# Environment variables to avoid caching issues
 ENV MPLCONFIGDIR=/tmp/matplotlib
 ENV NUMBA_CACHE_DIR=/tmp/numba_cache
 
 # Install Python dependencies
+COPY requirements.txt .
 RUN pip install --upgrade pip && \
-    pip install --root-user-action=ignore -r requirements.txt
+    pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
 
+# Copy all app files
+COPY . .
 
-EXPOSE 9000
+# Expose internal port for Hugging Face
+EXPOSE 7860
 
+# Run the app
 CMD ["python", "app.py"]
-
