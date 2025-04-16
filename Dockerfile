@@ -2,7 +2,7 @@ FROM huggingface/transformers-pytorch-gpu:latest
 
 # Set working directory
 WORKDIR /code
-
+CMD run cpu at 200mb
 # Copy app files
 COPY . .
 
