@@ -1,74 +1,12 @@
-
-# Read the doc: https://huggingface.co/docs/hub/spaces-sdks-docker
+# read the doc: https://huggingface.co/docs/hub/spaces-sdks-docker
 # you will also find guides on how best to write your Dockerfile
 
-FROM python:3.10
+FROM python
+
+# The two following lines are requirements for the Dev Mode to be functional
+# Learn more about the Dev Mode at https://huggingface.co/dev-mode-explorers
 RUN useradd -m -u 1000 user
+WORKDIR /app
 
-# Copy requirements file and install dependencies
-COPY requirements.txt /app/
-RUN pip install -r requirements.txt
-
-# Copy the application code
-COPY --chown=user . /app
-
-# Download NLTK data
-RUN python -m nltk.downloader punkt wordnet
-FROM python:3.9
-
-
-# Install necessary packages
-RUN pip install --no-cache-dir some-package
-
-# Add your application code
-COPY . /app
-
-# Set resource limits for the container
-# Note: This is typically done in the Docker run command or docker-compose.yml, not in the Dockerfile
-# Example of setting limits in docker-compose.yml:
-# services:
-#   your_service:
-#     deploy:
-#       resources:
-#         limits:
-#           cpus: '0.1'  # 100mb CPU equivalent
-#           memory: 100M
-
-# Command to run your application
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Explain
+COPY --chown=user ./requirements.txt requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
