@@ -4,6 +4,11 @@ from riley_genesis import RileyCore
 import tempfile
 from TTS.api import TTS
 
+import torch, multiprocessing
+
+torch.set_num_threads(multiprocessing.cpu_count(10))
+torch.set_num_interop_threads(max(5, multiprocessing.cpu_count() // 10))
+
 riley = RileyCore()
 tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
