@@ -11,9 +11,13 @@ import datetime
 import logging
 import gradio as gr
 
-# Enable logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+
+# /app/riley_api.py
+
+def get_riley_response(message):
+    # You can make this as advanced as you want
+    return f"Hello, I’m Riley. You said: {message}"
+
 
 # Initialize lemmatizer
 lemmatizer = WordNetLemmatizer()
