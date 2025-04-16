@@ -1,4 +1,8 @@
 
+import os
+import tempfile
+os.environ["NUMBA_DISABLE_CACHE"] = "1"
+os.environ["NUMBA_CACHE_DIR"] = tempfile.gettempdir()
 
 import gradio as gr
 from models import ask_riley
