@@ -1,14 +1,8 @@
-
-# create and configure a new process
-Run process = multiprocessing.Process(target=python:3.10)
-
-# start the new process
-Run process.start(python:3.10)
 FROM python:3.10
 
 
 
-WORKDIR /app
+WORKDIR /app.py
 COPY . .
 
 RUN pip install -r requirements.txt
