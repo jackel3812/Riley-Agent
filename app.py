@@ -43,6 +43,49 @@ def chat_interface(history, user_input):
 
     return history, "", audio_path, history
 
+    LOG_FILE_PATH = "./logs.txt"
+
+def read_logs(keyword="", num_lines=100):
+    if not os.path.exists(LOG_FILE_PATH):
+        return "⚠️ Log file not found."
+
+    with open(LOG_FILE_PATH, "r", encoding="utf-8", errors="ignore") as file:
+        lines = file.readlines()
+
+    if keyword:
+        lines = [line for line in lines if keyword.lower() in line.lower()]
+
+    return "".join(lines[-num_lines:])
+
+# === Gradio UI Layout ===
+with gr.Blocks(css="static/styles.css") as demo:
+    with gr.Tabs():
+        with gr.Tab("🤖 Riley"):
+            chatbot = gr.Chatbot()
+            msg = gr.Textbox(label="Your message")
+            state = gr.State([])
+
+            def respond(message, history):
+                response = ask_riley(message)
+                history.append((message, response))
+                logging.info(f"User: {message} → Riley: {response}")
+                return history, ""
+
+            msg.submit(respond, [msg, state], [chatbot, msg])
+            gr.ClearButton([chatbot, msg])
+
+        with gr.Tab("📜 Logs"):
+            keyword_input = gr.Textbox(label="Search Logs (e.g., error, warning, fail)")
+            line_slider = gr.Slider(10, 1000, value=100, label="How many lines to display")
+            log_output = gr.Textbox(label="Logs", lines=20, interactive=False)
+
+            refresh_btn = gr.Button("🔄 Refresh Logs")
+            refresh_btn.click(fn=read_logs, inputs=[keyword_input, line_slider], outputs=log_output)
+
+if __name__ == "__main__":
+    demo.launch()
+
+
 # Custom CSS
 css = """
 body { background: #0b0f1e; color: #00ffff; font-family: 'Orbitron', sans-serif; }
