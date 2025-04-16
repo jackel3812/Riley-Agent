@@ -1,8 +1,10 @@
-
 import os
 import tempfile
+
+# Prevent numba and TTS from crashing by redirecting cache dirs
 os.environ["NUMBA_DISABLE_CACHE"] = "1"
 os.environ["NUMBA_CACHE_DIR"] = tempfile.gettempdir()
+os.environ["XDG_CACHE_HOME"] = tempfile.gettempdir()
 
 import gradio as gr
 from models import ask_riley
