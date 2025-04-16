@@ -7,7 +7,7 @@ Run pip install sudo
 RUN sudo install TTS
 RUN python3 -m pip install --upgrade pip
 RUN Upgrade pip and install your TTS wheel first
-RUN pip install --upgrade pip && \ pip install TTS-0.22.0-cp311-cp311-manylinux1_x86_64.whl
+RUN pip-install-TTS-0.22.0-cp311-cp311-manylinux1_x86_64.whl
 
 # Install remaining project dependencies
 RUN pip install -r requirements.txt
