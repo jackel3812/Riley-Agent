@@ -1,6 +1,6 @@
 # app.py
 import torch
-torch.set_num_threads(7)  # Try 2–4, experiment with what runs faster
+torch.set_num_threads(27)  # Try 2–4, experiment with what runs faster
 
 import gradio as gr
 from models import ask_riley
