@@ -1,5 +1,5 @@
 import gradio as gr
-import os
+
 
 
 # ⬇️ Then define the interface
