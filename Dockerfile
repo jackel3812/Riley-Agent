@@ -2,7 +2,7 @@ FROM python:3.10
 
 WORKDIR /app.py
 COPY . .
-run pip upgrade pip
+RUN pip install --upgrade pip
 RUN pip install -r requirements.py
 CMD ["python", "app.py"]
 
