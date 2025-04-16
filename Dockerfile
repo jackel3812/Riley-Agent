@@ -1,6 +1,6 @@
 Run pip install python 3.12
 
-FROM 
+FROM python 
 WORKDIR /app
 COPY . .
 CMD cpu(5)
