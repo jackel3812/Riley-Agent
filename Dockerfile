@@ -1,10 +1,6 @@
 FROM pytho
 WORKDIR /app
 COPY . .
-CMD cpu(5)
-CMD ["python", "app.py"]
-RUN pip install --no-cache-dir gradio
-CMD pip install tts
 RUN pip install gtts 
 RUN pip install flask
 RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
