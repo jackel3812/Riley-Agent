@@ -3,10 +3,10 @@ TTS==0.17.1
 
 Flask 
 numpy 
-nltk 3.8.1
-keras 2.11.0
-tensorflow-cpu 2.11.0
-transformers 4.36.2
-scikit-learn 1.3.2
+nltk 
+keras 
+tensorflow-cpu 
+transformers 
+scikit-learn 
 TTS
 gradio
