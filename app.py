@@ -2,7 +2,7 @@ import gradio as gr
 from models import ask_riley
 from riley_genesis import RileyCore
 import tempfile
-from TTS.api import TTS
+from tts.api import tts
 
 import torch, multiprocessing
 
@@ -10,7 +10,7 @@ torch.set_num_threads(multiprocessing.cpu_count(10))
 torch.set_num_interop_threads(max(5, multiprocessing.cpu_count() // 10))
 
 riley = RileyCore()
-tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
+tts = tts(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
 def chat_interface(history, user_input):
     if user_input.startswith("!mode"):
