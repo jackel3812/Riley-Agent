@@ -1,12 +1,5 @@
-pipe.to("cpu")  # Ensure models run on CPU 
-
-gtts
-torch
-Flask 
-numpy 
-nltk 
-keras 
-tensorflow-cpu 
-transformers 
-scikit-learn 
-gradio
+Flask
+numpy
+nltk
+keras
+tensorflow
