@@ -15,8 +15,8 @@ from TTS.api import TTS
 
 import torch, multiprocessing
 
-torch.set_num_threads(multiprocessing.cpu_count(10))
-torch.set_num_interop_threads(max(5, multiprocessing.cpu_count() // 10))
+torch.set_num_threads(multiprocessing.cpu_count(3))
+torch.set_num_interop_threads(max(5, multiprocessing.cpu_count(3) // 2))
 
 riley = RileyCore()
 TTS= TTS(model_name="TTS_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
