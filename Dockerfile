@@ -20,8 +20,6 @@ COPY --chown=user . /app
 RUN python -m nltk.downloader punkt wordnet
 FROM python:3.9
 
-# Set the working directory
-WORKDIR 
 
 # Install necessary packages
 RUN pip install --no-cache-dir some-package
