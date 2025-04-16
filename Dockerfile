@@ -24,19 +24,8 @@ RUN python -m nltk.downloader punkt wordnet
 # Command to run the server
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
 
-
-nlp = None
-
-def get_nlp():
-    global nlp
-    if nlp is None:
-        from transformers import pipeline
-        nlp = pipeline("text-generation")
-    return nlp
-
-
-def generate_big_output(prompt):
-    result = heavy_tool.run(prompt)
-    del heavy_tool
-    gc.collect()
-    return result
+Run # Use RUN to set performance-oriented configurations
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    python -m nltk.downloader punkt wordnet
+--memory=100MB my_container
