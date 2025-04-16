@@ -1,35 +1,4 @@
-Hugging Face's logo
-Hugging Face
 
-Spaces:
-
-Zelgodiz
-/
-Riley 
-
-like
-0
-
-App
-Files
-Community
-Settings
-
-Zelgodiz
-commited on 21 minutes ago
-Commit 
-a30ffc2
- ·
-verified
-·
-1 Parent(s): 5f3da9f
-Update Dockerfile
-Files changed (1)
-Dockerfile
-+0
--36
-Dockerfile
-CHANGED
 # Read the doc: https://huggingface.co/docs/hub/spaces-sdks-docker
 # you will also find guides on how best to write your Dockerfile
 
