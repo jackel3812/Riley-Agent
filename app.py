@@ -5,6 +5,17 @@ import tempfile
 os.environ["NUMBA_DISABLE_CACHE"] = "1"
 os.environ["NUMBA_CACHE_DIR"] = tempfile.gettempdir()
 os.environ["XDG_CACHE_HOME"] = tempfile.gettempdir()
+os.environ["TTS_CACHE_DIR"] = tempfile.gettempdir()
+os.environ["HOME"] = tempfile.gettempdir()
+
+import gradio as gr
+from models import ask_riley
+from riley_genesis import RileyCore
+from TTS.api import TTS
+
+# Initialize Riley + TTS
+riley = RileyCore()
+tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
 import gradio as gr
 from models import ask_riley
