@@ -1,3 +1,12 @@
+import logging
+
+# Save logs to logs.txt
+logging.basicConfig(
+    filename="logs.txt",
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s] %(message)s",)
+
+
 import gradio as gr
 from models import ask_riley
 from riley_genesis import RileyCore
