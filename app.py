@@ -1,4 +1,4 @@
-lauy (main Hugging Face app file)
+# app.py
 import gradio as gr
 from models import ask_riley
 from riley_genesis import RileyCore
@@ -8,7 +8,6 @@ import tempfile
 # Initialize core engine and TTS
 riley = RileyCore()
 tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
-nch(server_name="0.0.0.0", server_port=7860)
 
 # app.p
 def chat_interface(history, user_input):
@@ -67,46 +66,3 @@ with gr.Blocks(css=css) as demo:
 
 if __name__ == "__main__":
     demo.launch()
-
-
-# models.py
-
-def ask_riley(prompt):
-    # Replace with your actual logic or LLM call
-    return f"(Simulated Response) Riley thinks: {prompt}"
-
-
-# riley_genesis.py
-class RileyCore:
-    def __init__(self):
-        self.mode = "default"
-        self.personality = "neutral"
-        self.memory = []
-
-    def set_mode(self, mode):
-        self.mode = mode
-        return f"Mode switched to {mode}"
-
-    def set_personality(self, profile):
-        self.personality = profile
-        return f"Personality set to {profile}"
-
-    def think(self, user_input):
-        return f"{self.personality.upper()} [{self.mode}]: {user_input}"
-
-    def remember(self, message):
-        self.memory.append(message)
-
-
-# requirements.txt
-gradio
-TTS
-numpy
-
-
-# Dockerfile
-FROM python:3.10-slim
-WORKDIR /app
-COPY . /app
-RUN pip install --no-cache-dir -r requirements.txt
-CMD ["python", "app.py"]
