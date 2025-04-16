@@ -1,5 +1,7 @@
 FROM python:3.10
 
+run import torch
+torch.set_num_threads(4)  # Try 2–4, experiment with what runs faster
 
 
 WORKDIR /app.py
