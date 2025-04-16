@@ -1,7 +1,4 @@
 import gradio as gr
-
-
-
 import os
 import tempfile
 # Environment configuration to avoid permission errors
@@ -11,29 +8,8 @@ os.environ["XDG_CACHE_HOME"] = tempfile.gettempdir()
 os.environ["TTS_CACHE_DIR"] = tempfile.gettempdir()
 os.environ["HOME"] = tempfile.gettempdir()
 
-
-
-
-
-
-
-
-
 from models import ask_riley
-
-
-
-
-
-
-
 from riley_genesis import RileyCore
-
-
-
-
-
-
 from TTS.api import TTS
 
 # Initialize Riley and TTS once
@@ -66,22 +42,22 @@ def chat_interface(history, user_input):
 
     return history, "", audio_path, history
 
-# Log reader
-def read_logs(keyword="", num_lines=100):
-    log_path = "./logs.txt"
-    if not os.path.exists(log_path):
-        return "⚠️ Log file not found."
 
+
+    # Log readerdef read_logs(keyword="", num_lines=100):
+    log_path = "./logs.txt"    if not os.path.exists(log_path):
+    return "⚠️ Log file not found."
     with open(log_path, "r", encoding="utf-8", errors="ignore") as file:
-        lines = file.readlines()
+    lines = file.readlines()
 
     if keyword:
-        lines = [line for line in lines if keyword.lower() in line.lower()]
+    lines = [line for line in lines if keyword.lower() in line.lower()]
 
     return "".join(lines[-num_lines:])
 
-# Gradio UI
-def build_interface():
+    # Gradio UI    
+    
+    def build_interface():
     css = """
     body { background: #0b0f1e; color: #00ffff; font-family: 'Orbitron', sans-serif; }
     .gradio-container {
@@ -97,7 +73,7 @@ def build_interface():
     }
     """
 
-    with gr.Blocks(css=css) as demo:
+        with gr.Blocks(css=css) as demo:
         gr.Markdown("# 🧬 RILEY-AI: Genesis Core (Phi-2 Patched)")
         gr.Markdown("### Fixed Memory | No Looping | Voice Enabled")
 
@@ -118,8 +94,8 @@ def build_interface():
             refresh_btn = gr.Button("🔄 Refresh Logs")
             refresh_btn.click(fn=read_logs, inputs=[keyword_input, line_slider], outputs=log_output)
 
-    return demo
+         return 
 
-# Launch the interface
-demo = build_interface()
-demo.queue().launch(debug=True)
+         # Launch the interface
+          = build_interface()
+         .queue().launch(debug=True)
