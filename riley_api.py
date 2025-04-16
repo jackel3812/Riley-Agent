@@ -16,6 +16,7 @@ from nltk.stem import WordNetLemmatizer
 import nltk
 import datetime
 import logging
+import gradio as gr
 
 # Enable logging
 logging.basicConfig(level=logging.DEBUG)
@@ -27,7 +28,7 @@ lemmatizer = WordNetLemmatizer()
 # Load model and data with error handling
 try:
     logger.debug("🔄 Loading model...")
-    model = load_model("mymodel.h5")  # Load trained model
+    model = load_model("mymodel.h5")
     logger.debug("✅ Model loaded successfully.")
 except Exception as e:
     logger.error(f"❌ Error loading model: {e}")
@@ -98,7 +99,23 @@ def get_riley_response(message):
     response = get_response(ints, intents)
     return response
 
-# Run the app
+# Gradio interface wrapper
+def gradio_chat(message):
+    return get_riley_response(message)
+
+demo = gr.Interface(
+    fn=gradio_chat,
+    inputs=gr.Textbox(label="Ask Riley something..."),
+    outputs=gr.Textbox(label="Riley's response"),
+    title="🧠 Riley AI Chatbot",
+    description="Riley is a smart AI assistant. Ask her anything."
+)
+
+# Run Gradio on Hugging Face
+if __name__ != "__main__":
+    demo.launch(server_name="0.0.0.0", server_port=7860)
+
+# Run Flask if local
 if __name__ == "__main__":
     logger.info("🚀 Starting Riley API server...")
-    app.run(host="0.0.0.0", port=5000)
+    # app.run(host="0.0.0.0", port=5000)  # Optional local use
