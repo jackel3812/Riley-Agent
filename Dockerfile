@@ -39,4 +39,3 @@ COPY . /app
 #           memory: 100M
 
 # Command to run your application
-CMD "riley_api.py"
