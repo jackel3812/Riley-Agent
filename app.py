@@ -1,14 +1,6 @@
 import gradio as gr
 import os
 
-
-
-   def # Return structured chat and audio
-    return [
-        {"role": "user", "content": message},
-        {"role": "assistant", "content": response}
-    ], audio_path
-
 # Build the Gradio interface
 def build_interface():
     with gr.Blocks(css="static/style.css") as demo:
