@@ -13,7 +13,7 @@ riley = RileyCore()
 tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
 # app.p
-def chat_interface(history, user_input):
+         
     if user_input.startswith("!mode"):
         _, mode = user_input.split()
         return history + [{"role": "system", "content": riley.set_mode(mode)}], "", None, history
