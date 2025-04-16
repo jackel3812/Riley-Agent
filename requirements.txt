@@ -1,5 +1,5 @@
 # TTS gets installed BEFORE anything else so it pins numpy
-TTS==0.17.1
+TTS
 
 
 torch
@@ -10,6 +10,6 @@ keras
 tensorflow-cpu 
 transformers 
 scikit-learn 
-TTS==0.17.1
+TTS
 
 gradio
