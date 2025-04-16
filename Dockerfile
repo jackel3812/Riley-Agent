@@ -2,7 +2,7 @@
 FROM python
 
 # Set working directory
-WORKDIR /app
+WORKDIR /https://pip.pypa.io/warnings/venv.
 
 # Install required system libraries for audio + TTS
 RUN apt-get update && \
