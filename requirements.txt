@@ -1,3 +1,5 @@
+pipe.to("cpu")  # Ensure models run on CPU 
+
 gtts
 torch
 Flask 
