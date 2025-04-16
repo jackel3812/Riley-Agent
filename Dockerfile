@@ -5,6 +5,7 @@ COPY . .
 Run pip install sudo 
 RUN python3 -m pip install --upgrade pip
 RUN pip install --no-cache-dir gradio
+Run pip install TTS==0.22.0
 RUN pip install gtts 
 RUN pip install flask 
 RUN pip install keras
