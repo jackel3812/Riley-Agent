@@ -1,5 +1,6 @@
-FROM python 3.12
-CMD pipe python.to("cpu")  # Ensure model runs on CPU and python 3.12 
+Run pip install python 3.12
+
+FROM 
 WORKDIR /app
 COPY . .
 CMD cpu(5)
