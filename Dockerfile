@@ -1,10 +1,11 @@
 
 FROM huggingface/transformers-pytorch-gpu:latest
-expose 7865
+
 # Set working directory
 WORKDIR /Riley
-# Copy app files
-COPY . .
+ copy riley_api.py
+
+
 
 # Install system packages needed by TTS/librosa
 RUN apt-get update && \
