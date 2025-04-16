@@ -10,7 +10,7 @@ os.makedirs("/tmp/mplconfig", exist_ok=True)
 os.makedirs("/tmp/.cache", exist_ok=True)
 
 # Fix thread usage
-torch.set_num_threads(multiprocessing.cpu_count())
+torch.set_num_threads(multiprocessing.cpu_count(3))
 
 import gradio as gr
 from models import ask_riley
