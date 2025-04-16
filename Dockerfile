@@ -2,7 +2,7 @@
 FROM huggingface/transformers-pytorch-gpu:latest
 expose 7865
 # Set working directory
-WORKDIR /code
+WORKDIR /Riley
 # Copy app files
 COPY . .
 
