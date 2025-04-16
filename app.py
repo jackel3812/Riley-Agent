@@ -1,12 +1,6 @@
 import gradio as gr
 import os
 
-from riley_api 
-
-# Riley AI voice response
-def submit_message(message):
-    # Get response from Riley core logic
-    response = get_riley_response(message)
 
 
     # Return structured chat and audio
