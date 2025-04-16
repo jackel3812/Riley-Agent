@@ -24,7 +24,7 @@ torch.set_num_threads(multiprocessing.cpu_count(1))
 torch.set_num_interop_threads(max(, multiprocessing.cpu_count(1) // ))
 
 riley = RileyCore()
-TTS= TTS(model_name="TTS_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
+TTS= TTS(model_name="TTS_models/en/ljspeech/tacotron2-DDC", progress_bar=True)
 
 def chat_interface(history, user_input):
     if user_input.startswith("!mode"):
