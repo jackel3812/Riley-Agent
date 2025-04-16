@@ -1,6 +1,6 @@
 
 FROM huggingface/transformers-pytorch-gpu:latest
-
+expose 7865
 # Set working directory
 WORKDIR /code
 # Copy app files
