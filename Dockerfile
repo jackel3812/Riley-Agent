@@ -1,5 +1,5 @@
 # Use the latest GPU-enabled PyTorch image with Hugging Face support
-FROM huggingface/transformers-pytorch-gpu:latest
+FROM python
 
 # Set working directory
 WORKDIR /app
