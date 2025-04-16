@@ -1,4 +1,4 @@
-CMD run cpu at 200mb
+ run cpu at 200mb
 FROM huggingface/transformers-pytorch-gpu:latest
 
 # Set working directory
