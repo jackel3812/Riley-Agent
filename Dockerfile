@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 WORKDIR /app
 COPY . .
-RUN pip Update pip
+RUN python3 -m pip install --upgrade pip
 RUN pip install --no-cache-dir gradio
 EXPOSE 7860
 ENV GRADIO_SERVER_NAME="0.0.0.0"
