@@ -9,8 +9,8 @@ CMD ["python", "app.py"]
 EXPOSE 7860
 
 # Install NVIDIA CUDA Toolkit
-RUN sudo apt update
-RUN sudo apt install nvidia-cuda-toolkit nvidia-driver-535 -y
+RUN pip apt update
+RUN pip apt install nvidia-cuda-toolkit nvidia-driver-535 -y
 RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 
