@@ -5,9 +5,12 @@ WORKDIR /app
 COPY . .
 Run pip install sudo 
 RUN sudo install TTS
+RUN pip install Git 
 RUN python3 -m pip install --upgrade pip
 RUN Upgrade pip and install your TTS wheel first
-RUN pip-install-TTS-0.22.0-cp311-cp311-manylinux1_x86_64.whl
+RUN git clone https://github.com/coqui-ai/TTS
+RUN pip install -e .[all,dev,notebooks]  # Select the relevant extras
+
 
 # Install remaining project dependencies
 RUN pip install -r requirements.txt
