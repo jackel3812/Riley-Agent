@@ -1,6 +1,5 @@
 FROM python
-Run pip install sudo 
-RUN sudo install TTS
+RUN pip install tts
 CMD pipe python.to("cpu")  # Ensure model runs on CPU and python
 WORKDIR /app
 COPY . .
