@@ -3,7 +3,7 @@ import os
 
 
 
-    # Return structured chat and audio
+   def # Return structured chat and audio
     return [
         {"role": "user", "content": message},
         {"role": "assistant", "content": response}
