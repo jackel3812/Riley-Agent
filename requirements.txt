@@ -1,3 +1,4 @@
+gtts
 torch
 Flask 
 numpy 
@@ -7,4 +8,3 @@ tensorflow-cpu
 transformers 
 scikit-learn 
 gradio
-gtts
