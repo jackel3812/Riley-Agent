@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-# Prevent numba and TTS from crashing by redirecting cache dirs
+# Environment configuration to avoid permission errors
 os.environ["NUMBA_DISABLE_CACHE"] = "1"
 os.environ["NUMBA_CACHE_DIR"] = tempfile.gettempdir()
 os.environ["XDG_CACHE_HOME"] = tempfile.gettempdir()
@@ -13,17 +13,7 @@ from models import ask_riley
 from riley_genesis import RileyCore
 from TTS.api import TTS
 
-# Initialize Riley + TTS
-riley = RileyCore()
-tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
-
-import gradio as gr
-from models import ask_riley
-from riley_genesis import RileyCore
-import tempfile
-from TTS.api import TTS
-
-# Initialize Riley + TTS
+# Initialize Riley and TTS once
 riley = RileyCore()
 tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
@@ -48,18 +38,18 @@ def chat_interface(history, user_input):
     history.append({"role": "user", "content": user_input})
     history.append({"role": "assistant", "content": response})
 
-    audio_path = tempfile.mktemp(suffix=".wav")
+    audio_path = tempfile.NamedTemporaryFile(suffix=".wav", delete=False).name
     tts.tts_to_file(text=response, file_path=audio_path)
 
     return history, "", audio_path, history
 
-    LOG_FILE_PATH = "./logs.txt"
-
+# Log reader
 def read_logs(keyword="", num_lines=100):
-    if not os.path.exists(LOG_FILE_PATH):
+    log_path = "./logs.txt"
+    if not os.path.exists(log_path):
         return "⚠️ Log file not found."
 
-    with open(LOG_FILE_PATH, "r", encoding="utf-8", errors="ignore") as file:
+    with open(log_path, "r", encoding="utf-8", errors="ignore") as file:
         lines = file.readlines()
 
     if keyword:
@@ -67,22 +57,35 @@ def read_logs(keyword="", num_lines=100):
 
     return "".join(lines[-num_lines:])
 
-# === Gradio UI Layout ===
-with gr.Blocks(css="static/styles.css") as demo:
-    with gr.Tabs():
-        with gr.Tab("🤖 Riley"):
-            chatbot = gr.Chatbot()
-            msg = gr.Textbox(label="Your message")
-            state = gr.State([])
+# Gradio UI
+def build_interface():
+    css = """
+    body { background: #0b0f1e; color: #00ffff; font-family: 'Orbitron', sans-serif; }
+    .gradio-container {
+        border: 2px solid #ffaa00; background: linear-gradient(145deg, #000000, #0c1440);
+        box-shadow: 0 0 25px #ffaa00; padding: 25px; border-radius: 20px;
+    }
+    button {
+        background-color: #0c1440; color: #ffaa00; border: 2px solid #ffaa00; border-radius: 8px;
+    }
+    button:hover { background-color: #ffaa00; color: black; }
+    .chatbox {
+        background-color: #111; color: #00ffff; border: 1px solid #00ffff; padding: 10px; height: 450px;
+    }
+    """
 
-            def respond(message, history):
-                response = ask_riley(message)
-                history.append((message, response))
-                logging.info(f"User: {message} → Riley: {response}")
-                return history, ""
+    with gr.Blocks(css=css) as demo:
+        gr.Markdown("# 🧬 RILEY-AI: Genesis Core (Phi-2 Patched)")
+        gr.Markdown("### Fixed Memory | No Looping | Voice Enabled")
 
-            msg.submit(respond, [msg, state], [chatbot, msg])
-            gr.ClearButton([chatbot, msg])
+        chatbot = gr.Chatbot(label="Riley Terminal", elem_classes="chatbox", type='messages')
+        msg = gr.Textbox(label="Ask or command Riley...")
+        audio = gr.Audio(label="Riley’s Voice", interactive=False)
+        clear = gr.Button("Clear Chat")
+        state = gr.State([])
+
+        msg.submit(chat_interface, [state, msg], [chatbot, msg, audio, state])
+        clear.click(lambda: ([], "", None, []), None, [chatbot, msg, audio, state])
 
         with gr.Tab("📜 Logs"):
             keyword_input = gr.Textbox(label="Search Logs (e.g., error, warning, fail)")
@@ -92,39 +95,8 @@ with gr.Blocks(css="static/styles.css") as demo:
             refresh_btn = gr.Button("🔄 Refresh Logs")
             refresh_btn.click(fn=read_logs, inputs=[keyword_input, line_slider], outputs=log_output)
 
-if __name__ == "__main__":
-    demo.launch()
+    return demo
 
-
-# Custom CSS
-css = """
-body { background: #0b0f1e; color: #00ffff; font-family: 'Orbitron', sans-serif; }
-.gradio-container {
-    border: 2px solid #ffaa00; background: linear-gradient(145deg, #000000, #0c1440);
-    box-shadow: 0 0 25px #ffaa00; padding: 25px; border-radius: 20px;
-}
-button {
-    background-color: #0c1440; color: #ffaa00; border: 2px solid #ffaa00; border-radius: 8px;
-}
-button:hover { background-color: #ffaa00; color: black; }
-.chatbox {
-    background-color: #111; color: #00ffff; border: 1px solid #00ffff; padding: 10px; height: 450px;
-}
-"""
-
-# UI Layout
-with gr.Blocks(css=css) as demo:
-    gr.Markdown("# 🧬 RILEY-AI: Genesis Core (Phi-2 Patched)")
-    gr.Markdown("### Fixed Memory | No Looping | Voice Enabled")
-
-    chatbot = gr.Chatbot(label="Riley Terminal", elem_classes="chatbox", type='messages')
-    msg = gr.Textbox(label="Ask or command Riley...")
-    audio = gr.Audio(label="Riley’s Voice", interactive=False)
-    clear = gr.Button("Clear Chat")
-    state = gr.State([])
-
-    msg.submit(chat_interface, [state, msg], [chatbot, msg, audio, state])
-    clear.click(lambda: ([], "", None, []), None, [chatbot, msg, audio, state])
-
-if __name__ == "__main__":
-    demo.launch()
+# Launch the interface
+demo = build_interface()
+demo.queue().launch(debug=True)
