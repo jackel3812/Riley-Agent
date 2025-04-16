@@ -9,7 +9,7 @@ CMD pip install tts
 RUN pip install gtts 
 RUN pip install flask
 RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-RUN pip install TTS==0.20.2
+RUN sudo install TTS
 RUN pip install keras
 ENV GRADIO_SERVER_NAME="0.0.0.0"
 CMD ["python", "app.py"]
