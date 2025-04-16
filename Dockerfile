@@ -1,7 +1,7 @@
 FROM FROM /python:3.10-slim/
 
 # Set working directory
-WORKDIR /venv/
+WORKDIR /app
 
 # Install required system libraries for audio + TTS
 RUN apt-get update && \
