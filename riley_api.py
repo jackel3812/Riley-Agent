@@ -116,3 +116,13 @@ if __name__ != "__main__":
 if __name__ == "__main__":
     logger.info("🚀 Starting Riley API server...")
     # app.run(host="0.0.0.0", port=5000)  # Optional local use
+    
+    
+    # riley_api.py
+
+    def get_riley_response(message):
+    """
+    This is the brain of Riley. You can later replace this with GPT, Mistral, or your custom AI.
+    """
+    # For now, a simple echo response:
+    return f"Hello, I'm Riley. You said: '{message}'"
