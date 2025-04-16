@@ -3,4 +3,5 @@ numpy
 nltk
 keras
 tensorflow
-tts
+pip install TTS==0.20.2
+
