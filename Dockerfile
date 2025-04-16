@@ -32,5 +32,7 @@ EXPOSE 7860
 # Start the application
 CMD ["python", "app.py"]
 
+ENV NUMBA_CACHE_DIR=/tmp/numba_cache
+ENV MPLCONFIGDIR=/tmp/mplconfig
 
 
