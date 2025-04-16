@@ -1,12 +1,17 @@
 import os
+import torch
+import multiprocessing
 
-# ✅ Redirect paths so numba and matplotlib can cache without errors
-os.environ["NUMBA_CACHE_DIR"] = "/tmp/numba_cache"
+# Fix font + cache errors
 os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
-
-# Optional: make sure temp folders exist
-os.makedirs("/tmp/numba_cache", exist_ok=True)
+os.environ["XDG_CACHE_HOME"] = "/tmp/.cache"
+os.environ["FONTCONFIG_PATH"] = "/usr/share/fonts"
 os.makedirs("/tmp/mplconfig", exist_ok=True)
+os.makedirs("/tmp/.cache", exist_ok=True)
+
+# Fix thread usage
+torch.set_num_threads(multiprocessing.cpu_count())
+
 import gradio as gr
 from models import ask_riley
 from riley_genesis import RileyCore
