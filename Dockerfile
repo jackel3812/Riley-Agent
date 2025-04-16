@@ -4,11 +4,6 @@
 FROM python:3.10
 RUN useradd -m -u 1000 user
 
-
-WORKDIR /app
-
-
-
 # Copy requirements file and install dependencies
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
