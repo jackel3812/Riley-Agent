@@ -1,18 +1,8 @@
-FROM python
-CMD pipe python.to("cpu")  # Ensure model runs on CPU and python
+FROM python 3.12
+CMD pipe python.to("cpu")  # Ensure model runs on CPU and python 3.12 
 WORKDIR /app
 COPY . .
 CMD cpu(5)
-
-
-
-
-RUN python3 -m pip install --upgrade pip
-
-
-# Install remaining project dependencies
-RUN pip install -r requirements.txt
-
 CMD ["python", "app.py"]
 RUN pip install --no-cache-dir gradio
 CMD pip install tts
