@@ -1,6 +1,13 @@
 import os
 import tempfile
 
+
+
+
+
+
+
+
 # Environment configuration to avoid permission errors
 os.environ["NUMBA_DISABLE_CACHE"] = "1"
 os.environ["NUMBA_CACHE_DIR"] = tempfile.gettempdir()
@@ -8,9 +15,29 @@ os.environ["XDG_CACHE_HOME"] = tempfile.gettempdir()
 os.environ["TTS_CACHE_DIR"] = tempfile.gettempdir()
 os.environ["HOME"] = tempfile.gettempdir()
 
-import gradio as gr
+
+
+
+
+
+
+
+
 from models import ask_riley
+
+
+
+
+
+
+
 from riley_genesis import RileyCore
+
+
+
+
+
+
 from TTS.api import TTS
 
 # Initialize Riley and TTS once
