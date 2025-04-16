@@ -1,28 +1,9 @@
-FROM FROM /python:3.10-slim/
+FROM python:3.10-slim
 
-# Set working directory
-WORKDIR /app
-
-# Install required system libraries for audio + TTS
-RUN apt-get update && \
-    apt-get install -y libsndfile1 ffmpeg && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Environment variables to avoid caching issues
-ENV MPLCONFIGDIR=/tmp/matplotlib
-ENV NUMBA_CACHE_DIR=/tmp/numba_cache
-
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
-
-# Copy all app files
+WORKDIR /usr/src/app
 COPY . .
-
-# Expose internal port for Hugging Face
+RUN pip install --no-cache-dir gradio
 EXPOSE 7860
+ENV GRADIO_SERVER_NAME="0.0.0.0"
 
-# Run the app
 CMD ["python", "app.py"]
