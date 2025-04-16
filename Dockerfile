@@ -5,7 +5,7 @@ COPY . .
 Run pip install sudo 
 RUN python3 -m pip install --upgrade pip
 RUN pip install --no-cache-dir gradio
-Run pip install -m TTS 3.9
+CMD pip install tts
 RUN pip install gtts 
 RUN pip install flask
 RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
