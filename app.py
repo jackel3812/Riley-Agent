@@ -1,59 +1,83 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 import tensorflow as tf
-tf.config.threading.set_intra_op_parallelism_threads(1)
-tf.config.threading.set_inter_op_parallelism_threads(1)
+from flask import Flask, request, jsonify, render_template
+from keras.models import load_model
+from nltk.stem import WordNetLemmatizer
+import nltk
+import numpy as np
+import pickle
+import json
+import logging
+import random
 
+# Setup logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
-import gradio as gr
-from transformers import pipeline
-from riley_api import get_riley_response as ask_riley
-from riley_genesis import RileyCore
-import tempfile
-from TTS.api import TTS
+# Setup lemmatizer and model
+nltk.download('punkt')
+lemmatizer = WordNetLemmatizer()
 
-riley = RileyCore()
-tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
+# Load model and data
+try:
+    model = load_model("mymodel.h5")
+    intents = json.loads(open("intents.json").read())
+    words = pickle.load(open("words.pkl", "rb"))
+    classes = pickle.load(open("classes.pkl", "rb"))
+    logger.info("✅ Model and data loaded successfully.")
+except Exception as e:
+    logger.error(f"❌ Error loading model or data: {e}")
+    raise SystemExit("Cannot start without model and data.")
 
-def chat_interface(history, user_input):
-    if user_input.startswith("!mode"):
-        _, mode = user_input.split()
-        return history + [{"role": "system", "content": riley.set_mode(mode)}], "", None, history
+# App init
+app = Flask(__name__, template_folder="templates", static_folder="static")
 
-    if user_input.startswith("!personality"):
-        _, profile = user_input.split()
-        return history + [{"role": "system", "content": riley.set_personality(profile)}], "", None, history
+# NLP functions
+def clean_up_sentence(sentence):
+    sentence_words = nltk.word_tokenize(sentence)
+    return [lemmatizer.lemmatize(w.lower()) for w in sentence_words]
 
-    context_prompt = riley.think(user_input)
-    response_raw = ask_riley(context_prompt)
-    response = response_raw.replace('\n', ' ').replace('\r', '').replace('\\', '').strip()
+def bow(sentence, words):
+    sentence_words = clean_up_sentence(sentence)
+    bag = [0] * len(words)
+    for s in sentence_words:
+        for i, w in enumerate(words):
+            if w == s:
+                bag[i] = 1
+    return np.array(bag)
 
-    if "User:" in response:
-        response = response.split("User:")[0].strip()
+def predict_class(sentence):
+    p = bow(sentence, words)
+    res = model.predict(np.array([p]))[0]
+    ERROR_THRESHOLD = 0.25
+    results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
+    results.sort(key=lambda x: x[1], reverse=True)
+    return_list = [{"intent": classes[r[0]], "probability": str(r[1])} for r in results]
+    return return_list
 
-    riley.remember(f"Riley: {response}")
-    history.append({"role": "user", "content": user_input})
-    history.append({"role": "assistant", "content": response})
+def get_response(ints, intents_json):
+    tag = ints[0]['intent'] if ints else 'noanswer'
+    for i in intents_json['intents']:
+        if i['tag'] == tag:
+            return random.choice(i['responses'])
+    return "I'm not sure I understand."
 
-    audio_path = tempfile.mktemp(suffix=".wav")
-    tts.tts_to_file(text=response, file_path=audio_path)
+def get_riley_response(message):
+    ints = predict_class(message)
+    return get_response(ints, intents)
 
-    return history, "", audio_path, history
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-css = "static/style.css"
-
-with gr.Blocks(css=css) as demo:
-    gr.Markdown("# 🧬 RILEY-AI: Genesis Core (Phi-2 Patched)")
-    gr.Markdown("### Fixed Memory | No Looping | Voice Enabled")
-
-    chatbot = gr.Chatbot(label="Riley Terminal", elem_classes="chatbox", type='messages')
-    msg = gr.Textbox(label="Ask or command Riley...")
-    audio = gr.Audio(label="Riley’s Voice", interactive=False)
-    clear = gr.Button("Clear Chat")
-    state = gr.State([])
-
-    msg.submit(chat_interface, [state, msg], [chatbot, msg, audio, state])
-    clear.click(lambda: ([], "", None, []), None, [chatbot, msg, audio, state])
+@app.route("/chat", methods=["POST"])
+def chat():
+    data = request.get_json()
+    user_message = data.get("message", "")
+    response = get_riley_response(user_message)
+    return jsonify({"response": response})
 
 if __name__ == "__main__":
-    demo.launch()
+    app.run(host="0.0.0.0", port=7860, debug=True)
