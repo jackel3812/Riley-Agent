@@ -32,5 +32,11 @@ EXPOSE 7860
 # Start the application
 CMD ["python", "app.py"]
 
+CMD import os
+
+CMD os.environ["OMP_NUM_THREADS"] = "5"          # or number of CPU cores you have
+CMD os.environ["MKL_NUM_THREADS"] = "5"
+CMD os.environ["TF_NUM_INTRAOP_THREADS"] = "3"
+CMD os.environ["TF_NUM_INTEROP_THREADS"] = "3"
 
 
