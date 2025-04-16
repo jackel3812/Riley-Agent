@@ -1,4 +1,11 @@
 import os
+import gc
+# Optional: reduce TensorFlow overhead if you're using it
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+
+import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 import tensorflow as tf
