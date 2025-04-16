@@ -6,5 +6,4 @@ keras
 tensorflow-cpu 
 transformers 
 scikit-learn 
-TTS 
 gradio
