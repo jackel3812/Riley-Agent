@@ -3,7 +3,6 @@ CMD pipe python.to("cpu")  # Ensure model runs on CPU and python
 WORKDIR /app
 COPY . .
 Run pip install sudo 
-RUN sudo install TTS
 RUN pip install Git 
 RUN python3 -m pip install --upgrade pip
 RUN Upgrade pip and install your TTS wheel first
