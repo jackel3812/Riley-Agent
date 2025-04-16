@@ -3,13 +3,11 @@
 
 FROM python:3.10
 RUN useradd -m -u 1000 user
-USER user
-ENV PATH="/home/user/.local/bin:$PATH"
+
 
 WORKDIR /app
 
-# Install pip and upgrade it
-RUN pip install --upgrade pip
+
 
 # Copy requirements file and install dependencies
 COPY requirements.txt /app/
