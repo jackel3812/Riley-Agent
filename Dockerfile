@@ -1,4 +1,5 @@
 FROM python
+RUN pipe.to("cpu")  # Ensure model runs on CPU and python
 WORKDIR /app
 COPY . .
 Run pip install sudo 
