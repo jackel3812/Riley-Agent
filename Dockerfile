@@ -1,5 +1,12 @@
-# Use the official Hugging Face Python base image
-FROM huggingface/transformers-pytorch-gpu:latest
+FROM python:3.10
+
+WORKDIR /app
+COPY . .
+
+RUN pip install -r requirements.txt
+
+CMD ["python", "app.py"]
+
 
 # Set working directory
 WORKDIR /code
