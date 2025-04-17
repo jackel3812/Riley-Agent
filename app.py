@@ -1,8 +1,8 @@
+from TTS.api import TTS
 import os
 import torch
 import multiprocessing
 import gradio
-from TTS.api import TTS
 import tempfile
 
 # Set environment variables to redirect cache and config directories
