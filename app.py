@@ -2,7 +2,7 @@ from TTS.api import TTS
 import os
 import torch
 import multiprocessing
-import gradio
+
 import tempfile
 
 # Set environment variables to redirect cache and config directories
@@ -23,9 +23,15 @@ torch.set_num_threads(multiprocessing.cpu_count())
 # Initialize TTS
 tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
-# Define your Gradio interface here
-def greet(name):
-    return f"Hello {name}!"
+from openai import OpenAI
 
-iface = gradio.Interface(fn=greet, inputs="text", outputs="text")
-iface.launch()
+client = OpenAI(
+  api_key="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"
+)
+
+completion = client.chat.completions.create(
+  model="gpt-4o-mini",
+  store=True,
+  messages=[
+    {"role": "user", "content": "write a haiku about ai"}
+      
