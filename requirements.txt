@@ -6,4 +6,5 @@ nltk
 keras
 tensorflow
 TTS
-
+--extra-index-url https://download.pytorch.org/whl/cu113
+torch
