@@ -17,11 +17,6 @@ CMD chmod -R 777 /tmp/.cache /tmp/.config /tmp/.local/share /tmp/mplconfig /tmp/
 # Set working directory inside the container
 WORKDIR /app
 
-# Install system dependencies for audio processing
-RUN apt update && apt install -y 
-   CMD  ffmpeg 
-  CMD libsndfile1 
-CMD && rm -rf /var/lib/apt/lists/*
 
 # Copy all files from your current folder to the container
 COPY . .
@@ -32,7 +27,8 @@ RUN pip install TTS-0.22.0-cp311-cp311-manylinux1_x86_64.whl
  CMD CMD  lask" did not complete successfully: exit code: 
 # Install remaining project dependencies
 RUN pip install requirements.txt
-
+CMD “Fix the GPU crash” or
+CMD “Build my local Riley engine now.”
 # Install additional Python packages
 RUN pip install gtts
 
