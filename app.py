@@ -1,53 +1,64 @@
 import os
+import re
+import tempfile
 import torch
 import multiprocessing
+import gradio as gr
+from models import ask_riley
+from riley_genesis import RileyCore
+from TTS.api import TTS
 
-# Fix font + cache errors
+# Fix font and cache permissions for Hugging Face
 os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 os.environ["XDG_CACHE_HOME"] = "/tmp/.cache"
 os.environ["FONTCONFIG_PATH"] = "/usr/share/fonts"
 os.makedirs("/tmp/mplconfig", exist_ok=True)
 os.makedirs("/tmp/.cache", exist_ok=True)
 
-import gradio as gr
-from models import ask_riley
-from riley_genesis import RileyCore
-import tempfile
-from TTS.api import TTS
+# Max out CPU threads safely
+torch.set_num_threads(max(1, multiprocessing.cpu_count()))
+torch.set_num_interop_threads(max(1, multiprocessing.cpu_count() // 2))
 
-import torch, multiprocessing
-
-torch.set_num_threads(multiprocessing.cpu_count(1))
-torch.set_num_interop_threads(max(, multiprocessing.cpu_count(1) // ))
-
+# Load Riley core + TTS voice
 riley = RileyCore()
-TTS= TTS(model_name="TTS_models/en/ljspeech/tacotron2-DDC", progress_bar=True)
+tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 
 def chat_interface(history, user_input):
     if user_input.startswith("!mode"):
-        _, mode = user_input.split()
-        return history + [{"role": "system", "content": riley.set_mode(mode)}], "", None, history
+        parts = user_input.split(maxsplit=1)
+        if len(parts) > 1:
+            mode = parts[1]
+            return history + [{"role": "system", "content": riley.set_mode(mode)}], "", None, history
 
     if user_input.startswith("!personality"):
-        _, profile = user_input.split()
-        return history + [{"role": "system", "content": riley.set_personality(profile)}], "", None, history
+        parts = user_input.split(maxsplit=1)
+        if len(parts) > 1:
+            profile = parts[1]
+            return history + [{"role": "system", "content": riley.set_personality(profile)}], "", None, history
 
+    # Generate response from Riley
     context_prompt = riley.think(user_input)
     response_raw = ask_riley(context_prompt)
-    response = response_raw.replace('\n', ' ').replace('\r', '').replace('\\', '').strip()
 
+    # Clean up response
+    response = re.sub(r'[\n\r\\]', ' ', response_raw).strip()
     if "User:" in response:
         response = response.split("User:")[0].strip()
 
     riley.remember(f"Riley: {response}")
+
+    # Append to history, limiting memory bloat
+    history = history[-30:]  # keep only last 30 turns
     history.append({"role": "user", "content": user_input})
     history.append({"role": "assistant", "content": response})
 
+    # Synthesize voice
     audio_path = tempfile.mktemp(suffix=".wav")
     tts.tts_to_file(text=response, file_path=audio_path)
 
     return history, "", audio_path, history
 
+# CSS
 css = """
 body { background: #0b0f1e; color: #00ffff; font-family: 'Orbitron', sans-serif; }
 .gradio-container {
@@ -63,6 +74,7 @@ button:hover { background-color: #ffaa00; color: black; }
 }
 """
 
+# Gradio UI
 with gr.Blocks(css=css) as demo:
     gr.Markdown("# 🧬 RILEY-AI: Genesis Core (Phi-2 Patched)")
     gr.Markdown("### Fixed Memory | No Looping | Voice Enabled")
