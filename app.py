@@ -8,6 +8,11 @@ from models import ask_riley
 from riley_genesis import RileyCore
 from TTS.api import TTS
 
+print(f"Is CUDA available: {torch.cuda.is_available()}")
+# True
+print(f"CUDA device: {torch.cuda.get_device_name(torch.cuda.current_device())}")
+# Tesla T4
+
 # Fix font and cache permissions for Hugging Face
 os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
 os.environ["XDG_CACHE_HOME"] = "/tmp/.cache"
