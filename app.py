@@ -1,7 +1,7 @@
 import os
 import torch
 import multiprocessing
-import gradio as gr
+import gradio
 from TTS.api import TTS
 import tempfile
 
@@ -27,5 +27,5 @@ tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
 def greet(name):
     return f"Hello {name}!"
 
-iface = gr.Interface(fn=greet, inputs="text", outputs="text")
+iface = gradio.Interface(fn=greet, inputs="text", outputs="text")
 iface.launch()
