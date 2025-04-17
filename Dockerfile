@@ -25,7 +25,7 @@ COPY . .
 RUN pip install TTS
  CMD CMD  lask" did not complete successfully: exit code: 
 # Install remaining project dependencies
-RUN pip install requirements.txt
+RUN pip install requirements
 CMD “Fix the GPU crash” or
 CMD “Build my local Riley engine now.”
 # Install additional Python packages
