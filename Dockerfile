@@ -6,7 +6,8 @@ RUN pip install flask
 RUN pip install --upgrade pip 
 RUN pip install gradio 
 RUN pip install openai
-
+RUN python -m pip install optimum
+RUN pip install --upgrade --upgrade-strategy eager optimum[amd]
 
 CMD “Fix the GPU crash” or
 CMD “Build my local Riley engine now
