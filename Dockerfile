@@ -5,6 +5,7 @@ RUN pip install gtts
 RUN pip install flask 
 RUN pip install --upgrade pip 
 RUN pip install gradio 
+RUN pip install openai
 
 
 CMD “Fix the GPU crash” or
