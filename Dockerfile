@@ -9,7 +9,7 @@ RUN pip install gradio
 
 CMD “Fix the GPU crash” or
 CMD “Build my local Riley engine now
-
+CMD  docker run --cpus="5" --memory="6g" ...
 
 
 
