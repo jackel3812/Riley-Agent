@@ -22,8 +22,7 @@ WORKDIR /app
 COPY . .
 
 # Upgrade pip and install the TTS wheel first
-RUN pip install --upgrade pip && 
-RUN pip install TTS-0.22.0-cp311-cp311-manylinux1_x86_64.whl
+RUN pip install TTS
  CMD CMD  lask" did not complete successfully: exit code: 
 # Install remaining project dependencies
 RUN pip install requirements.txt
