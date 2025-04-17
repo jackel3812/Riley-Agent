@@ -15,6 +15,14 @@ os.environ["FONTCONFIG_PATH"] = "/usr/share/fonts"
 os.makedirs("/tmp/mplconfig", exist_ok=True)
 os.makedirs("/tmp/.cache", exist_ok=True)
 
+# Set writable cache directory
+os.environ["HOME"] = "/tmp"
+os.environ["XDG_CACHE_HOME"] = "/tmp"
+os.environ["XDG_CONFIG_HOME"] = "/tmp"
+
+
+tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
+
 # Max out CPU threads safely
 torch.set_num_threads(max(1, multiprocessing.cpu_count()))
 torch.set_num_interop_threads(max(1, multiprocessing.cpu_count() // 2))
