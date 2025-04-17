@@ -9,9 +9,6 @@ os.environ["FONTCONFIG_PATH"] = "/usr/share/fonts"
 os.makedirs("/tmp/mplconfig", exist_ok=True)
 os.makedirs("/tmp/.cache", exist_ok=True)
 
-# Fix thread usage
-torch.set_num_threads(multiprocessing.cpu_count(1))
-
 import gradio as gr
 from models import ask_riley
 from riley_genesis import RileyCore
