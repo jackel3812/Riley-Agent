@@ -7,11 +7,11 @@ import gradio as gr
 from models import ask_riley
 from riley_genesis import RileyCore
 from TTS.api import TTS
-
-print(f"Is CUDA available: {torch.cuda.is_available()}")
-# True
-print(f"CUDA device: {torch.cuda.get_device_name(torch.cuda.current_device())}")
-# Tesla T4
+print("Is CUDA available:", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print(f"CUDA device: {torch.cuda.get_device_name(torch.cuda.current_device())}")
+else:
+    print("Running on CPU (no GPU detected in this environment).")
 
 # Fix font and cache permissions for Hugging Face
 os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
