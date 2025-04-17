@@ -1,37 +1,34 @@
-from TTS.api import TTS
-import os
-import torch
-import multiprocessing
+import gradio as gr
+import json
+import requests
 
-import tempfile
+# ✅ Set your Hugging Face Space URL here:
+RILEY_URL = "https://huggingface.co/spaces/Zelgodiz/Riley"
 
-# Set environment variables to redirect cache and config directories
-os.environ["XDG_CACHE_HOME"] = "/tmp/.cache"
-os.environ["XDG_CONFIG_HOME"] = "/tmp/.config"
-os.environ["XDG_DATA_HOME"] = "/tmp/.local/share"
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
+def ask_riley(user_input, chat_history):
+    try:
+        r = requests.post(RILEY_URL, json={"message": user_input})
+        r.raise_for_status()
+        r_data = r.json()
+        bot_reply = r_data.get("response", "⚠️ No reply.")
+    except requests.exceptions.HTTPError as http_err:
+        bot_reply = f"HTTP error: {http_err}"
+    except json.JSONDecodeError:
+        bot_reply = "⚠️ Invalid JSON response."
+    except Exception as e:
+        bot_reply = f"Error: {e}"
 
-# Ensure directories exist
-os.makedirs("/tmp/.cache", exist_ok=True)
-os.makedirs("/tmp/.config", exist_ok=True)
-os.makedirs("/tmp/.local/share", exist_ok=True)
-os.makedirs("/tmp/mplconfig", exist_ok=True)
+    chat_history.append((user_input, bot_reply))
+    return chat_history, ""
 
-# Set the number of threads for PyTorch
-torch.set_num_threads(multiprocessing.cpu_count())
+# ✅ Launch the UI
+with gr.Blocks(theme=gr.themes.Monochrome()) as ui:
+    gr.Markdown("## 🧬 Riley Genesis Core\nWelcome to your personal AI terminal.")
+    chatbot = gr.Chatbot(label="Riley")
+    txt = gr.Textbox(label="Ask or command Riley")
+    state = gr.State([])
 
-# Initialize TTS
-tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False)
+    txt.submit(ask_riley, [txt, state], [chatbot, txt])
+    gr.Button("Clear").click(lambda: ([], ""), None, [chatbot, txt])
 
-from openai import OpenAI
-
-client = OpenAI(
-  api_key="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"
-)
-
-completion = client.chat.completions.create(
-  model="gpt-4o-mini",
-  store=True,
-  messages=[
-    {"role": "user", "content": "write a haiku about ai"}
-      
+ui.launch()
