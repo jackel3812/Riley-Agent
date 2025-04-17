@@ -26,6 +26,7 @@ RUN pip install flask
 Cmd docker build -t riley-ai .
 CMD docker run -p 7860:7860 riley-ai
 CMD docker run --rm -it \ ---mount type=tmpfs,destination=/tmp \ -p 7860:7860 \ your-image-name
+CMD sudo chmod -R o+w /var/cache/fontconfig
 
 
 CMD import os
