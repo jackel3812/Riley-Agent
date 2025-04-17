@@ -31,8 +31,8 @@ CMD “Build my local Riley engine now.”
 # Install additional Python packages
 RUN pip install gtts
 RUN pip install flask 
-
-
+RUN pip install --upgrade pip
+CMD PiP install dependencies requirements
 # Expose application port
 EXPOSE 7860
 
