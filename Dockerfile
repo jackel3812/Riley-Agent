@@ -27,22 +27,24 @@ Cmd docker build -t riley-ai .
 CMD docker run -p 7860:7860 riley-ai
 
 
-import os
-import torch
+CMD import os
+CMD import torch
 
 # Fix Hugging Face Spaces cache permissions
-os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
-os.environ["NUMBA_CACHE_DIR"] = "/tmp/numba_cache"
-os.environ["XDG_CACHE_HOME"] = "/tmp/.cache"
-os.environ["FONTCONFIG_PATH"] = "/usr/share/fonts"
+CMD os.environ["MPLCONFIGDIR"] = "/tmp/mplconfig"
+CMD os.environ["NUMBA_CACHE_DIR"] = "/tmp/numba_cache"
+CMD os.environ["XDG_CACHE_HOME"] = "/tmp/.cache"
+CMD os.environ["FONTCONFIG_PATH"] = "/usr/share/fonts"
 
-os.makedirs("/tmp/mplconfig", exist_ok=True)
-os.makedirs("/tmp/numba_cache", exist_ok=True)
-os.makedirs("/tmp/.cache", exist_ok=True)
+CMD os.makedirs("/tmp/mplconfig", exist_ok=True)
+CMD os.makedirs("/tmp/numba_cache", exist_ok=True)
+CMD os.makedirs("/tmp/.cache", exist_ok=True)
 
 # Force PyTorch to use 200 threads
-torch.set_num_threads(200)
-torch.set_num_interop_threads(200)
+CMD torch.set_num_threads(200)
+CMD torch.set_num_interop_threads(200)
+
+
 # Expose app port (optional, based on your app.py)
 EXPOSE 7860
 
