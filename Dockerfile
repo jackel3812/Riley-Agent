@@ -30,10 +30,8 @@ CMD “Fix the GPU crash” or
 CMD “Build my local Riley engine now.”
 # Install additional Python packages
 RUN pip install gtts
+RUN pip install flask 
 
-RUN pipo install  torch torchvision torchaudio
-RUN pipo install --index-url https://download.pytorch.org/whl/cu118 
-RUN pipo install flask
 
 # Expose application port
 EXPOSE 7860
