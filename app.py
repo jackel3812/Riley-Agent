@@ -97,4 +97,4 @@ with gr.Blocks(css=css) as demo:
     clear.click(lambda: ([], "", None, []), None, [chatbot, msg, audio, state])
 
 if __name__ == "__main__":
-    demo.launch()
+   demo.launch(share=True)
