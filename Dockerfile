@@ -10,17 +10,17 @@ ENV XDG_CACHE_HOME=/tmp/.cache \
     FONTCONFIG_PATH=/usr/share/fonts
 
 # Create necessary directories with appropriate permissions
-RUN mkdir -p /tmp/.cache /tmp/.config /tmp/.local/share /tmp/mplconfig /tmp/numba_cache && \
-    chmod -R 777 /tmp/.cache /tmp/.config /tmp/.local/share /tmp/mplconfig /tmp/numba_cache
+RUN mkdir -p /tmp/.cache /tmp/.config /tmp/.local/share /tmp/mplconfig /tmp/numba_cache && \ 
+CMD chmod -R 777 /tmp/.cache /tmp/.config /tmp/.local/share /tmp/mplconfig /tmp/numba_cache
 
 # Set working directory inside the container
 WORKDIR /app
 
 # Install system dependencies for audio processing
-RUN apt update && apt install -y \
-    ffmpeg \
-    libsndfile1 \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y 
+   CMD  ffmpeg 
+  CMD libsndfile1 
+CMD && rm -rf /var/lib/apt/lists/*
 
 # Copy all files from your current folder to the container
 COPY . .
@@ -28,8 +28,7 @@ COPY . .
 # Upgrade pip and install the TTS wheel first
 RUN pip install --upgrade pip && 
 RUN pip install TTS-0.22.0-cp311-cp311-manylinux1_x86_64.whl
- ERROR: process "/bin/sh -c pip install gtts     torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118     keras     f
- lask" did not complete successfully: exit code: 
+ CMD CMD  lask" did not complete successfully: exit code: 
 # Install remaining project dependencies
 RUN pip install requirements.txt
 
