@@ -93,8 +93,10 @@ with gr.Blocks(css=css) as demo:
     clear = gr.Button("Clear Chat")
     state = gr.State([])
 
-   msg.submit(chat_interface, [state, msg], [chatbot, msg, audio])
-   clear.click(lambda: ([], "", None, []), None, [chatbot, msg, audio, state])
+   def msg.submit(chat_interface, [state, msg], [chatbot, msg, audio])
+
+   def clear.click(lambda: ([], "", None), None, [chatbot, msg, audio])
+
 
 
 if __name__ == "__main__":
