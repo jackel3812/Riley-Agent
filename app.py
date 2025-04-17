@@ -1,34 +1,64 @@
 import gradio as gr
-import json
-import requests
+from huggingface_hub import InferenceClient
 
-# ✅ Set your Hugging Face Space URL here:
-RILEY_URL = "https://huggingface.co/spaces/Zelgodiz/Riley"
+"""
+For more information on `huggingface_hub` Inference API support, please check the docs: https://huggingface.co/docs/huggingface_hub/v0.22.2/en/guides/inference
+"""
+client = InferenceClient("HuggingFaceH4/zephyr-7b-beta")
 
-def ask_riley(user_input, chat_history):
-    try:
-        r = requests.post(RILEY_URL, json={"message": user_input})
-        r.raise_for_status()
-        r_data = r.json()
-        bot_reply = r_data.get("response", "⚠️ No reply.")
-    except requests.exceptions.HTTPError as http_err:
-        bot_reply = f"HTTP error: {http_err}"
-    except json.JSONDecodeError:
-        bot_reply = "⚠️ Invalid JSON response."
-    except Exception as e:
-        bot_reply = f"Error: {e}"
 
-    chat_history.append((user_input, bot_reply))
-    return chat_history, ""
+def respond(
+    message,
+    history: list[tuple[str, str]],
+    system_message,
+    max_tokens,
+    temperature,
+    top_p,
+):
+    messages = [{"role": "system", "content": system_message}]
 
-# ✅ Launch the UI
-with gr.Blocks(theme=gr.themes.Monochrome()) as ui:
-    gr.Markdown("## 🧬 Riley Genesis Core\nWelcome to your personal AI terminal.")
-    chatbot = gr.Chatbot(label="Riley")
-    txt = gr.Textbox(label="Ask or command Riley")
-    state = gr.State([])
+    for val in history:
+        if val[0]:
+            messages.append({"role": "user", "content": val[0]})
+        if val[1]:
+            messages.append({"role": "assistant", "content": val[1]})
 
-    txt.submit(ask_riley, [txt, state], [chatbot, txt])
-    gr.Button("Clear").click(lambda: ([], ""), None, [chatbot, txt])
+    messages.append({"role": "user", "content": message})
 
-ui.launch()
+    response = ""
+
+    for message in client.chat_completion(
+        messages,
+        max_tokens=max_tokens,
+        stream=True,
+        temperature=temperature,
+        top_p=top_p,
+    ):
+        token = message.choices[0].delta.content
+
+        response += token
+        yield response
+
+
+"""
+For information on how to customize the ChatInterface, peruse the gradio docs: https://www.gradio.app/docs/chatinterface
+"""
+demo = gr.ChatInterface(
+    respond,
+    additional_inputs=[
+        gr.Textbox(value="You are a friendly Chatbot.", label="System message"),
+        gr.Slider(minimum=1, maximum=2048, value=512, step=1, label="Max new tokens"),
+        gr.Slider(minimum=0.1, maximum=4.0, value=0.7, step=0.1, label="Temperature"),
+        gr.Slider(
+            minimum=0.1,
+            maximum=1.0,
+            value=0.95,
+            step=0.05,
+            label="Top-p (nucleus sampling)",
+        ),
+    ],
+)
+
+
+if __name__ == "__main__":
+    demo.launch()

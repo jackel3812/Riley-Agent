@@ -1,10 +1,1 @@
-
-gradio==4.44.1
-Flask
-numpy
-nltk
-keras
-tensorflow
-TTS
---extra-index-url https://download.pytorch.org/whl/cu113
-torch
+huggingface_hub==0.25.2
