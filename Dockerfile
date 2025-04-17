@@ -2,6 +2,7 @@
 FROM python:3.11-slim
 
 # Set environment variables for cache and config directories
+CMD 
 ENV XDG_CACHE_HOME=/tmp/.cache \
     XDG_CONFIG_HOME=/tmp/.config \
     XDG_DATA_HOME=/tmp/.local/share \
@@ -10,7 +11,7 @@ ENV XDG_CACHE_HOME=/tmp/.cache \
     FONTCONFIG_PATH=/usr/share/fonts
 
 # Create necessary directories with appropriate permissions
-RUN mkdir -p /tmp/.cache /tmp/.config /tmp/.local/share /tmp/mplconfig /tmp/numba_cache && \ 
+CMD mkdir -p /tmp/.cache /tmp/.config /tmp/.local/share /tmp/mplconfig /tmp/numba_cache && \ 
 CMD chmod -R 777 /tmp/.cache /tmp/.config /tmp/.local/share /tmp/mplconfig /tmp/numba_cache
 
 # Set working directory inside the container
